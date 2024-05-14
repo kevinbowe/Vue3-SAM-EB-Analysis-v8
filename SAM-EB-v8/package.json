@@ -1,0 +1,12 @@
+{
+  "name": "sam-eb-v8",
+  "version": "1.0.0",
+  "description": "This project contains source code and supporting files for a serverless application that you can deploy with the SAM CLI. It includes the following files and folders.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+	 "samsync" : "sam sync --template /Users/kevinbowe/Projects/Analysis/Vue3-SAM-EB-Analysis-v8/SAM-EB-v8/template.yaml --s3-bucket vue3-sam-eb-analysis-v8-bucket --stack-name vue3-sam-eb-analysis-v8-stack --region us-east-1"
+  },
+  "author": "",
+  "license": "ISC"
+}
