@@ -1,0 +1,54 @@
+// {
+//   "files": [],
+//   "references": [
+//     {
+//       "path": "./tsconfig.node.json"
+//     },
+//     {
+//       "path": "./tsconfig.app.json"
+//     }
+//   ]
+// }
+
+{
+	"extends": "@vue/tsconfig/tsconfig.dom.json",
+	// "extends": "@vue/tsconfig/tsconfig.web.json",
+	"include": [
+		"env.d.ts", 
+		"src/**/*", 
+		"src/**/*.vue",
+
+		// Added 11/28/23
+		"src/**/*.ts",
+		"src/**/*.d.ts",
+		"src/**/*.tsx",
+		"src/**/*.vue"
+	],
+	"compilerOptions": {
+
+		"target": "esnext",
+
+		"verbatimModuleSyntax": true,
+		"ignoreDeprecations": "5.0",
+		"skipLibCheck": true,
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["./src/*"],
+		},
+
+		//	DISABLED 2/21/24
+		// "noEmit" : true,
+		"noUnusedLocals" : false,
+		"noImplicitAny": false,
+		"noUnusedParameters": false,
+	},
+
+	"references": [
+		{
+			"path": "./tsconfig.node.json"
+		} //,
+		// {
+		// 	"path": "./tsconfig.app.json"
+		// }
+	]
+}
