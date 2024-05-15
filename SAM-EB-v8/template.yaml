@@ -25,6 +25,109 @@ Resources:
           Properties:
             Path: /hello
             Method: get
+        Trigger:
+          Type: CloudWatchEvent
+          Properties:
+            Pattern:
+              source:
+                - custom.vue3sam-eb-analysis
+              detail-type:
+                - payment
+              detail:
+                action:
+                  - sendcard
+
+  eventBroadcastFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: event-broadcast/
+      Handler: handler.lambdaHandler
+      Runtime: nodejs20.x
+      Events:
+        eventBroadcast:
+          Type: Api
+          Properties:
+            Path: /broadcast
+            Method: get      
+      Policies:
+        - Statement:
+          - Effect: Allow
+            Resource: '*'
+            Action:
+              - events:PutEvents
+
+  listener3HandlerFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: event-listen/
+      Handler: listener3.listener3Handler
+      Runtime: nodejs20.x
+      Events:
+        Trigger:
+          Type: CloudWatchEvent
+          Properties:
+            Pattern:
+              source:
+                - custom.vue3sam-eb-analysis
+              detail-type:
+                - payment
+              detail:
+                result:
+                  - anything-but: approved
+
+  listener2HandlerFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: event-listen/
+      Handler: listener2.listener2Handler
+      Runtime: nodejs20.x
+      Events:
+        Trigger:
+          Type: CloudWatchEvent
+          Properties:
+            Pattern:
+              source:
+                - custom.vue3sam-eb-analysis
+              detail-type:
+                - payment
+              detail:
+                location:
+                  - prefix: NY-
+
+  listener1HandlerFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: event-listen/
+      Handler: listener1.listener1Handler
+      Runtime: nodejs20.x
+
+  listener1Rule:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: Approved transactions
+      EventBusName: default
+      EventPattern:
+        source:
+          - custom.vue3sam-eb-analysis
+        detail-type:
+          - payment
+        detail:
+          result:
+            - approved
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt listener1HandlerFn.Arn
+          Id: listener1Target
+
+  invokeLambdaEventListener1Permission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref listener1HandlerFn
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt listener1Rule.Arn
+
+
 
 # Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
